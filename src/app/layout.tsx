@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import DashboardSideDrawer from "@/components/DashboardSideDrawer";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -26,9 +27,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <div className="w-full flex flex-col lg:flex-row h-full overflow-y-auto">
+          <div>
+            <DashboardSideDrawer />
+          </div>
+          <div className=" flex-1 relative">{children}</div>
+        </div>
       </body>
     </html>
   );
