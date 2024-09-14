@@ -2,6 +2,7 @@
 import { Dispatch, FC, ReactNode, SetStateAction, useState } from "react";
 import Icons from "./Icons";
 import Link from "next/link";
+import { useTheme } from "@/context/theme-context";
 
 interface DashboardSideNavBarProps {
   DrawerClose?: FC<{ children: ReactNode }>;
@@ -36,11 +37,12 @@ const DashboardSideNavBar: FC<DashboardSideNavBarProps> = ({
   DrawerClose,
   setOpen,
 }) => {
+  const { theme } = useTheme();
   const [activeId, setActiveId] = useState<number>(1);
 
   return (
-    <div className=" flex flex-col max-w-60 w-full h-dvh bg-dark-g p-4 pr-10 overflow-y-auto">
-      <div className={`flex justify-between `}>
+    <div className=" flex flex-col max-w-60 w-full h-dvh py-4  overflow-y-auto">
+      <div className={`flex justify-between pl-2`}>
         <Icons.logo />
         {/* {DrawerClose && (
           <DrawerClose>
@@ -53,26 +55,22 @@ const DashboardSideNavBar: FC<DashboardSideNavBarProps> = ({
           {sidebarOptions.map((option) => {
             const Icon = Icons[option.Icon];
             return (
-              <li key={option.id}>
+              <li key={option.id} className="hover:bg-slate-500 p-2 pr-10">
                 <Link
                   onClick={() => {
                     if (setOpen) setOpen(false);
                   }}
                   href={option.href}
-                  className="text-white flex items-center  gap-3 text-lg font-semibold">
+                  className=" flex items-center  gap-3 text-lg font-semibold">
                   <span className="">
                     <Icon
                       className=""
-                      stroke={activeId === option.id ? "#35BAFD" : "white"}
+                      stroke={theme === "dark" ? "white" : "black"}
                     />
                   </span>
 
                   <span
-                    className={`truncate ${
-                      activeId === option.id
-                        ? "text-joprimary-400"
-                        : "text-white"
-                    }`}>
+                    className={`truncate ${activeId === option.id ? "" : ""}`}>
                     {option.name}
                   </span>
                 </Link>

@@ -61,7 +61,7 @@ const Icons = {
     </svg>
   ),
   logo: (props: IconProps) => (
-    <span className="text-xl sm:text-3xl font-semibold text-white">EVDash</span>
+    <span className="text-xl sm:text-3xl font-semibold">EVDash</span>
   ),
   close: (props: IconProps) => (
     <svg

@@ -48,7 +48,6 @@ const page: FC<pageProps> = ({}) => {
     [headers[3]]: true,
     [headers[4]]: true,
   });
-  const [pageData, setPageData] = useState<any[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -57,7 +56,7 @@ const page: FC<pageProps> = ({}) => {
       Papa.parse(csvData, {
         header: true,
         complete: (result: any) => {
-          setEvData(result.data.slice(0, 5000)); // Limit to 5000 rows
+          setEvData(result.data.slice(0, 5000));
           const newHeaders = Object.keys(result.data[0] || {});
           setHeaders(newHeaders);
         },
