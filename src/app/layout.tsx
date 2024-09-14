@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import DashboardSideDrawer from "@/components/DashboardSideDrawer";
+import ThemeContextProvider from "@/context/theme-context";
+import ThemeSwitch from "@/components/theme-switch";
+import { ThemeProvider } from "@/components/theme-provider";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -28,12 +31,19 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <div className="w-full flex flex-col lg:flex-row h-full overflow-y-auto">
-          <div>
-            <DashboardSideDrawer />
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange>
+          <div className="w-full flex flex-col lg:flex-row h-full overflow-y-auto">
+            <div className="absolute z-50">
+              <DashboardSideDrawer />
+            </div>
+            <div className=" flex-1 relative h-dvh w-dvw">{children}</div>
           </div>
-          <div className=" flex-1 relative">{children}</div>
-        </div>
+          <ThemeSwitch />
+        </ThemeProvider>
       </body>
     </html>
   );
