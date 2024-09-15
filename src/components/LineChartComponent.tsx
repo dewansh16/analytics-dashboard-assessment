@@ -1,7 +1,7 @@
 "use client";
 
 import { TrendingUp } from "lucide-react";
-import { Bar, BarChart, CartesianGrid, LabelList, XAxis } from "recharts";
+import { Line, LineChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import {
   Card,
   CardContent,
@@ -17,7 +17,7 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 
-interface BarChartComponentProps {
+interface LineChartComponentProps {
   data: Record<string, number>;
 }
 
@@ -28,7 +28,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-function BarChartComponent({ data }: BarChartComponentProps) {
+function LineChartComponent({ data }: LineChartComponentProps) {
   // Transform data into the chart format
   const chartData = Object.entries(data).map(([year, count]) => ({
     year,
@@ -45,13 +45,16 @@ function BarChartComponent({ data }: BarChartComponentProps) {
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
-          <BarChart
+          <LineChart
             accessibilityLayer
             data={chartData}
             margin={{
               top: 20,
+              right: 20,
+              bottom: 20,
+              left: 20,
             }}>
-            <CartesianGrid vertical={false} />
+            <CartesianGrid strokeDasharray="3 3" />
             <XAxis
               dataKey="year"
               tickLine={false}
@@ -59,19 +62,19 @@ function BarChartComponent({ data }: BarChartComponentProps) {
               axisLine={false}
               tickFormatter={(value) => value.toString().slice(0, 4)}
             />
+            <YAxis tickLine={false} axisLine={false} tickMargin={10} />
             <ChartTooltip
               cursor={false}
               content={<ChartTooltipContent hideLabel />}
             />
-            <Bar dataKey="count" fill="var(--color-count)" radius={8}>
-              <LabelList
-                position="top"
-                offset={12}
-                className="fill-foreground"
-                fontSize={12}
-              />
-            </Bar>
-          </BarChart>
+            <Line
+              dataKey="count"
+              stroke="var(--color-count)"
+              strokeWidth={2}
+              dot={false}
+              type="linear"
+            />
+          </LineChart>
         </ChartContainer>
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
@@ -86,4 +89,4 @@ function BarChartComponent({ data }: BarChartComponentProps) {
   );
 }
 
-export default BarChartComponent;
+export default LineChartComponent;

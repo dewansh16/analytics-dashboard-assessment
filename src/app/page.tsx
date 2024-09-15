@@ -6,7 +6,6 @@ import { Card } from "@/components/ui/card";
 import {
   getEVCountByMakeAndModel,
   getEVsByCAFVEligibility,
-  getEVsByCity,
   getEVsByMake,
   getEVsByType,
   getEVsByYear,
@@ -16,7 +15,7 @@ import {
   getTotalEVPopulationIncrease,
 } from "@/lib/utils";
 import { PieChartComponent } from "@/components/PieChartComponent";
-import BarChartComponent from "@/components/BarChartComponent";
+import BarChartComponent from "@/components/LineChartComponent";
 import StackedBarChartComponent from "@/components/StackedBarChartComponent";
 // import BarChartComponent from "@/components/BarChartComponent";
 
