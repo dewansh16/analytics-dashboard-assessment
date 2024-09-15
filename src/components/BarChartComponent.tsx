@@ -22,7 +22,7 @@ interface BarChartComponentProps {
 }
 
 const chartConfig = {
-  desktop: {
+  count: {
     label: "EV Count",
     color: "hsl(var(--chart-1))",
   },
@@ -32,13 +32,13 @@ function BarChartComponent({ data }: BarChartComponentProps) {
   // Transform data into the chart format
   const chartData = Object.entries(data).map(([year, count]) => ({
     year,
-    desktop: count,
+    count,
   }));
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Bar Chart - EV Count by Year</CardTitle>
+        <CardTitle>EV Count by Year</CardTitle>
         <CardDescription>
           Electric Vehicle Population Growth Over the Years
         </CardDescription>
@@ -63,7 +63,7 @@ function BarChartComponent({ data }: BarChartComponentProps) {
               cursor={false}
               content={<ChartTooltipContent hideLabel />}
             />
-            <Bar dataKey="desktop" fill="var(--color-ev-count)" radius={8}>
+            <Bar dataKey="count" fill="var(--color-count)" radius={8}>
               <LabelList
                 position="top"
                 offset={12}
@@ -76,10 +76,10 @@ function BarChartComponent({ data }: BarChartComponentProps) {
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
         <div className="flex gap-2 font-medium leading-none">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+          Trending up by 5.2% this year <TrendingUp className="h-4 w-4" />
         </div>
         <div className="leading-none text-muted-foreground">
-          Showing electric vehicle count for the last few years
+          Showing electric vehicle count for the last years
         </div>
       </CardFooter>
     </Card>

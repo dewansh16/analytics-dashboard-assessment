@@ -292,3 +292,25 @@ export function getModelWithMostRange(data: Record<string, string>[]): {
     range: maxRange,
   };
 }
+
+export function getEVCountByMakeAndModel(data: Record<string, string>[]) {
+  return data.reduce((acc, curr) => {
+    const Make = curr["Make"];
+    const Model = curr["Model"];
+
+    // Ensure the 'Make' exists in the accumulator
+    if (!acc[Make]) {
+      acc[Make] = {};
+    }
+
+    // If the 'Model' doesn't exist under the 'Make', initialize it with 0
+    if (!acc[Make][Model]) {
+      acc[Make][Model] = 0;
+    }
+
+    // Increment the count for the specific model under the make
+    acc[Make][Model] += 1;
+
+    return acc;
+  }, {} as Record<string, Record<string, number>>);
+}

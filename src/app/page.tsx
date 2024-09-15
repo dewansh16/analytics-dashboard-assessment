@@ -4,6 +4,7 @@ import Papa from "papaparse";
 import Badge from "@/components/Badge";
 import { Card } from "@/components/ui/card";
 import {
+  getEVCountByMakeAndModel,
   getEVsByCAFVEligibility,
   getEVsByCity,
   getEVsByMake,
@@ -15,6 +16,8 @@ import {
   getTotalEVPopulationIncrease,
 } from "@/lib/utils";
 import { PieChartComponent } from "@/components/PieChartComponent";
+import BarChartComponent from "@/components/BarChartComponent";
+import StackedBarChartComponent from "@/components/StackedBarChartComponent";
 // import BarChartComponent from "@/components/BarChartComponent";
 
 type topMakerType = { make: string; totalEVs: number; increase: number };
@@ -27,11 +30,10 @@ type evPopulationIncreaseType = {
 type topModelType = { company: string; model: string; range: number };
 
 export default function Home() {
-  const [headers, setHeaders] = useState<string[]>([]);
   const [eVPopulation, setEVPopulation] = useState<number>(0);
   const [evByYear, setEvByYear] = useState<Record<string, number>>({});
   const [evByMake, setEvByMake] = useState<Record<string, number>>({});
-  const [evByCity, setEvByCity] = useState<Record<string, number>>({});
+  // const [evByCity, setEvByCity] = useState<Record<string, number>>({});
   const [evByType, setEvByType] = useState<Record<string, number>>({});
   const [topEvModel, setTopEvModel] = useState<topModelType>({
     company: "",
@@ -58,6 +60,10 @@ export default function Home() {
       increase: 0,
     });
 
+  const [modelCount, setModelCount] = useState<
+    Record<string, Record<string, number>>
+  >({});
+
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch("/Electric_Vehicle_Population_Data.csv");
@@ -72,9 +78,6 @@ export default function Home() {
 
           const newEvByMake = getEVsByMake(data);
           setEvByMake(newEvByMake);
-
-          const newEvByCity = getEVsByCity(data);
-          setEvByCity(newEvByCity);
 
           const newEvByType = getEVsByType(data);
           setEvByType(newEvByType);
@@ -95,8 +98,9 @@ export default function Home() {
           const newTopModel = getModelWithMostRange(data);
           setTopEvModel(newTopModel);
 
-          const newHeaders = Object.keys(result.data[0] || {});
-          setHeaders(newHeaders);
+          const newModelCount = getEVCountByMakeAndModel(data);
+          setModelCount(newModelCount);
+
           setEVPopulation(data.length);
         },
       });
@@ -105,21 +109,19 @@ export default function Home() {
     fetchData();
   }, []);
 
-  console.log(headers, evByYear, evByCity);
-
   return (
-    <div className="p-10 pl-16 h-dvh w-dvw">
-      <div className="w-full flex gap-4 justify-between">
-        <div className="w-2/3">
-          <div className=" flex gap-4 pb-5">
-            <Card className="w-1/3 p-4">
+    <div className="p-5 lg:p-10 pl-8 max-lg:pt-8 lg:pl-16 h-dvh w-dvw">
+      <div className="w-full flex max-sm:flex-col gap-4 justify-between">
+        <div className="w-full sm:w-2/3">
+          <div className=" flex max-sm:flex-col gap-4 pb-5">
+            <Card className="w-full sm:w-1/3 p-4">
               <p className="pb-2 flex gap-2.5 items-center ">
                 Total EV population
                 <Badge percentage={totalPopIncrease.rateOfIncrease} />
               </p>
               <p className="text-3xl font-semibold">{`${eVPopulation}`}</p>
             </Card>
-            <Card className="w-1/3 p-4">
+            <Card className="w-full sm:w-1/3 p-4">
               <p className="pb-2 flex gap-2.5 items-center ">
                 Top EV Maker
                 <Badge
@@ -134,7 +136,7 @@ export default function Home() {
                 {makerWithMostEVsAndIncrease.make}
               </p>
             </Card>
-            <Card className="w-1/3 p-4">
+            <Card className="w-full sm:w-1/3 p-4">
               <p className="pb-2 flex gap-2.5 items-center ">
                 Type of EV (BEVs/PHEVs)
               </p>
@@ -144,8 +146,8 @@ export default function Home() {
               </p>
             </Card>
           </div>
-          <div className=" flex gap-4">
-            <Card className="w-1/3 p-4">
+          <div className=" flex max-sm:flex-col gap-4">
+            <Card className="w-full sm:w-1/3 p-4">
               <p className="pb-2 flex gap-2.5 items-center ">
                 CAFV Eligibility{" "}
                 <Badge
@@ -162,7 +164,7 @@ export default function Home() {
                 {evByEligibility["Clean Alternative Fuel Vehicle Eligible"]}
               </p>
             </Card>
-            <Card className="w-1/3 p-4">
+            <Card className="w-full sm:w-1/3 p-4">
               <p className="pb-2 flex gap-2.5 items-center ">Max Range EV</p>
               <p className="text-3xl font-semibold">
                 {topEvModel.company +
@@ -173,7 +175,7 @@ export default function Home() {
                   ")"}
               </p>
             </Card>
-            <Card className="w-1/3 p-4">
+            <Card className="w-full sm:w-1/3 p-4">
               <p className="pb-2 flex gap-2.5 items-center ">Total EV Models</p>
               <p className="text-3xl font-semibold">
                 {Object.keys(rangeByMakeAndYear).length}
@@ -181,7 +183,7 @@ export default function Home() {
             </Card>
           </div>
         </div>
-        <div className="w-1/3 flex gap-4 justify-center items-center">
+        <div className="w-full sm:w-1/3 flex gap-4 justify-center items-center">
           <PieChartComponent
             data={evByMake}
             title="Electric Vehicle Market Share"
@@ -190,7 +192,10 @@ export default function Home() {
         </div>
       </div>
       <div className="w-full py-10">
-        {/* <BarChartComponent data={evByYear} /> */}
+        <BarChartComponent data={evByYear} />
+      </div>
+      <div>
+        <StackedBarChartComponent data={modelCount} />
       </div>
     </div>
   );

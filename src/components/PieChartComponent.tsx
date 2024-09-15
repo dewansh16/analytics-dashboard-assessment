@@ -62,13 +62,13 @@ export function PieChartComponent({
   description = "",
 }: PieChartComponentProps) {
   const chartConfig = generateChartConfig(data);
-  console.log("chartConfig = ", chartConfig);
+  // console.log("chartConfig = ", chartConfig);
 
   const chartData = React.useMemo(
     () => generateChartData(data, chartConfig),
     [data, chartConfig]
   );
-  console.log("charData = ", chartData);
+  // console.log("charData = ", chartData);
 
   const totalCount = React.useMemo(() => {
     return chartData.reduce((acc, curr) => acc + curr.value, 0);
