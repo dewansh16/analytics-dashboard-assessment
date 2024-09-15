@@ -32,20 +32,6 @@ const Navbar = () => {
           </li>
           <li>
             <Link
-              href="#quest"
-              className="flex w-full items-center justify-center px-3 py-3 hover:text-gray-500 transition dark:text-gray-500 dark:hover:text-gray-300">
-              Quest
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="#event"
-              className="flex w-full items-center justify-center px-3 py-3 hover:text-gray-500 transition dark:text-gray-500 dark:hover:text-gray-300">
-              Event
-            </Link>
-          </li>
-          <li>
-            <Link
               href="#services"
               className="flex w-full items-center justify-center px-3 py-3 hover:text-gray-500 transition dark:text-gray-500 dark:hover:text-gray-300">
               Services
