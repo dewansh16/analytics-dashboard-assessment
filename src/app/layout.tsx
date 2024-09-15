@@ -9,8 +9,8 @@ import Navbar from "@/components/Navbar";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Profile Update App",
-  description: "update profile of user",
+  title: "EV Dashboard",
+  description: "Analyze EV data",
 };
 
 export default function RootLayout({

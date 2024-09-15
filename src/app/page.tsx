@@ -118,7 +118,7 @@ export default function Home() {
                 Total EV population
                 <Badge percentage={totalPopIncrease.rateOfIncrease} />
               </p>
-              <p className="text-3xl font-semibold">{`${eVPopulation}`}</p>
+              <p className="text-3xl font-semibold">{`${eVPopulation - 1}`}</p>
             </Card>
             <Card className="w-full sm:w-1/3 p-4">
               <p className="pb-2 flex gap-2.5 items-center ">
