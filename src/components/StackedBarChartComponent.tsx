@@ -81,8 +81,10 @@ function StackedBarChartComponent({
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Electric Vehicle Distribution by Make and Model</CardTitle>
-        <CardDescription>
+        <CardTitle className="text-2xl">
+          Electric Vehicle Distribution by Make and Model
+        </CardTitle>
+        <CardDescription className="text-base">
           Visual representation of electric vehicle counts across different car
           manufacturers and their models. The chart illustrates the number of
           vehicles per model within each company, allowing for a clear
@@ -91,7 +93,10 @@ function StackedBarChartComponent({
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
-          <BarChart data={chartData} layout="vertical">
+          <BarChart
+            data={chartData}
+            layout="vertical"
+            margin={{ top: 20, right: 20, bottom: 20, left: 50 }}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis
               type="number"
@@ -103,7 +108,7 @@ function StackedBarChartComponent({
             <YAxis
               type="category"
               dataKey="Company"
-              tickFormatter={(value) => value} // Display only the first letter of the company name
+              tickFormatter={(value) => value.slice(0, 10)} // Display only the first letter of the company name
               tickLine={false}
               axisLine={false}
               tickMargin={10}

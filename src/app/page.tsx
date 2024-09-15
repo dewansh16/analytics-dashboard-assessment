@@ -4,6 +4,7 @@ import Papa from "papaparse";
 import Badge from "@/components/Badge";
 import { Card } from "@/components/ui/card";
 import {
+  formatNumberWithCommas,
   getEVCountByMakeAndModel,
   getEVsByCAFVEligibility,
   getEVsByMake,
@@ -15,9 +16,9 @@ import {
   getTotalEVPopulationIncrease,
 } from "@/lib/utils";
 import { PieChartComponent } from "@/components/PieChartComponent";
-import BarChartComponent from "@/components/LineChartComponent";
+import LineChartComponent from "@/components/LineChartComponent";
 import StackedBarChartComponent from "@/components/StackedBarChartComponent";
-// import BarChartComponent from "@/components/BarChartComponent";
+import BarChartComponent from "@/components/BarChart";
 
 type topMakerType = { make: string; totalEVs: number; increase: number };
 type evPopulationIncreaseType = {
@@ -109,80 +110,93 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="p-5 lg:p-10 pl-8 max-lg:pt-8 lg:pl-16 h-dvh w-dvw">
-      <div className="w-full flex max-sm:flex-col gap-4 justify-between">
-        <div className="w-full sm:w-2/3">
-          <div className=" flex max-sm:flex-col gap-4 pb-5">
-            <Card className="w-full sm:w-1/3 p-4">
-              <p className="pb-2 flex gap-2.5 items-center ">
-                Total EV population
-                <Badge percentage={totalPopIncrease.rateOfIncrease} />
-              </p>
-              <p className="text-3xl font-semibold">{`${eVPopulation - 1}`}</p>
-            </Card>
-            <Card className="w-full sm:w-1/3 p-4">
-              <p className="pb-2 flex gap-2.5 items-center ">
-                Top EV Maker
-                <Badge
-                  percentage={
-                    (makerWithMostEVsAndIncrease.increase /
-                      makerWithMostEVsAndIncrease.totalEVs) *
-                    100
-                  }
-                />
-              </p>
-              <p className="text-3xl font-semibold">
-                {makerWithMostEVsAndIncrease.make}
-              </p>
-            </Card>
-            <Card className="w-full sm:w-1/3 p-4">
-              <p className="pb-2 flex gap-2.5 items-center ">
-                Type of EV (BEVs/PHEVs)
-              </p>
-              <p className="text-3xl font-semibold">
-                {evByType["Battery Electric Vehicle (BEV)"]}/
-                {evByType["Plug-in Hybrid Electric Vehicle (PHEV)"]}
-              </p>
-            </Card>
-          </div>
-          <div className=" flex max-sm:flex-col gap-4">
-            <Card className="w-full sm:w-1/3 p-4">
-              <p className="pb-2 flex gap-2.5 items-center ">
-                CAFV Eligibility{" "}
-                <Badge
-                  percentage={
-                    (evByEligibility[
-                      "Clean Alternative Fuel Vehicle Eligible"
-                    ] /
-                      +eVPopulation) *
-                    100
-                  }
-                />
-              </p>
-              <p className="text-3xl font-semibold">
-                {evByEligibility["Clean Alternative Fuel Vehicle Eligible"]}
-              </p>
-            </Card>
-            <Card className="w-full sm:w-1/3 p-4">
-              <p className="pb-2 flex gap-2.5 items-center ">Max Range EV</p>
-              <p className="text-3xl font-semibold">
-                {topEvModel.company +
-                  " " +
-                  topEvModel.model +
-                  " (" +
-                  topEvModel.range +
-                  ")"}
-              </p>
-            </Card>
-            <Card className="w-full sm:w-1/3 p-4">
-              <p className="pb-2 flex gap-2.5 items-center ">Total EV Models</p>
-              <p className="text-3xl font-semibold">
-                {Object.keys(rangeByMakeAndYear).length}
-              </p>
-            </Card>
+    <div className="flex flex-col gap-y-10 p-5 lg:p-10 pl-8 max-lg:pt-8 lg:pl-16 h-dvh w-dvw">
+      <div className="w-full flex flex-col sm:flex-row gap-4">
+        <div className="w-full sm:w-2/3 flex flex-col gap-4">
+          <div className="flex-1 flex flex-col gap-4">
+            <div className="flex flex-col sm:flex-row gap-4 flex-1">
+              <Card className="flex-1 p-4">
+                <p className="pb-2 flex gap-2.5 items-center ">
+                  Total EV population
+                  <Badge percentage={totalPopIncrease.rateOfIncrease} />
+                </p>
+                <p className="text-3xl font-semibold">
+                  {formatNumberWithCommas(+`${eVPopulation - 1}`)}
+                </p>
+              </Card>
+              <Card className="flex-1 p-4">
+                <p className="pb-2 flex gap-2.5 items-center ">
+                  Top EV Maker
+                  <Badge
+                    percentage={
+                      (makerWithMostEVsAndIncrease.increase /
+                        makerWithMostEVsAndIncrease.totalEVs) *
+                      100
+                    }
+                  />
+                </p>
+                <p className="text-3xl font-semibold">
+                  {makerWithMostEVsAndIncrease.make}
+                </p>
+              </Card>
+              <Card className="flex-1 p-4">
+                <p className="pb-2 flex gap-2.5 items-center ">
+                  Type of EV (BEVs/PHEVs)
+                </p>
+                <p className="text-3xl font-semibold">
+                  {formatNumberWithCommas(
+                    evByType["Battery Electric Vehicle (BEV)"]
+                  )}
+                  /
+                  {formatNumberWithCommas(
+                    evByType["Plug-in Hybrid Electric Vehicle (PHEV)"]
+                  )}
+                </p>
+              </Card>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-4 flex-1">
+              <Card className="flex-1 p-4">
+                <p className="pb-2 flex gap-2.5 items-center ">
+                  CAFV Eligibility{" "}
+                  <Badge
+                    percentage={
+                      (evByEligibility[
+                        "Clean Alternative Fuel Vehicle Eligible"
+                      ] /
+                        +eVPopulation) *
+                      100
+                    }
+                  />
+                </p>
+                <p className="text-3xl font-semibold">
+                  {formatNumberWithCommas(
+                    evByEligibility["Clean Alternative Fuel Vehicle Eligible"]
+                  )}
+                </p>
+              </Card>
+              <Card className="flex-1 p-4">
+                <p className="pb-2 flex gap-2.5 items-center ">Max Range EV</p>
+                <p className="text-3xl font-semibold">
+                  {topEvModel.company +
+                    " " +
+                    topEvModel.model +
+                    " (" +
+                    topEvModel.range +
+                    ")"}
+                </p>
+              </Card>
+              <Card className="flex-1 p-4">
+                <p className="pb-2 flex gap-2.5 items-center ">
+                  Total EV Models
+                </p>
+                <p className="text-3xl font-semibold">
+                  {Object.keys(rangeByMakeAndYear).length}
+                </p>
+              </Card>
+            </div>
           </div>
         </div>
-        <div className="w-full sm:w-1/3 flex gap-4 justify-center items-center">
+        <div className="w-full sm:w-1/3 flex flex-col gap-4">
           <PieChartComponent
             data={evByMake}
             title="Electric Vehicle Market Share"
@@ -190,11 +204,14 @@ export default function Home() {
           />
         </div>
       </div>
-      <div className="w-full py-10">
-        <BarChartComponent data={evByYear} />
+      <div className="w-full">
+        <LineChartComponent data={evByYear} />
       </div>
       <div>
         <StackedBarChartComponent data={modelCount} />
+      </div>
+      <div>
+        <BarChartComponent data={rangeByMakeAndYear} />
       </div>
     </div>
   );

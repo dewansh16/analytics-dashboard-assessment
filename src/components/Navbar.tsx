@@ -13,7 +13,7 @@ const Navbar = () => {
     <>
       <nav className="bg-white max-lg:hidden text-gray-800 p-4 px-8 flex justify-between items-center border border-b-gray-300 dark:border-b-slate-700 dark:bg-slate-900 dark:text-gray-500 dark:hover:text-gray-300">
         <div className="text-2xl font-semibold">
-          <Link href="#home">Map Up</Link>
+          <Link href="#home">MapUp</Link>
         </div>
         <ul className="hidden md:flex space-x-4 font-normal">
           <li>

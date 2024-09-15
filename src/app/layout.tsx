@@ -22,7 +22,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.className} bg-background text-foregroundl `}>
         <ThemeContextProvider>
-          <div className="w-full flex flex-col lg:flex-row h-full overflow-y-auto">
+          <div className="w-full flex flex-col lg:flex-row h-full overflow-y-auto mb-10">
             <div className=" lg:hidden absolute z-50">
               <DashboardSideDrawer />
             </div>

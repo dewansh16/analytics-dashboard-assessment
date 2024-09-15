@@ -106,7 +106,7 @@ const Page: FC<pageProps> = ({}) => {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="ml-auto">
-                Columns
+                Edit Columns
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="max-h-40 overflow-auto">
@@ -138,7 +138,7 @@ const Page: FC<pageProps> = ({}) => {
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id}>
                   {headerGroup.headers.map((header) => (
-                    <TableHead key={header.id}>
+                    <TableHead key={header.id} className="min-w-fit">
                       {header.isPlaceholder
                         ? null
                         : flexRender(

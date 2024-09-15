@@ -38,8 +38,8 @@ function LineChartComponent({ data }: LineChartComponentProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>EV Count by Year</CardTitle>
-        <CardDescription>
+        <CardTitle className="text-2xl">EV Count by Year</CardTitle>
+        <CardDescription className="text-base">
           Electric Vehicle Population Growth Over the Years
         </CardDescription>
       </CardHeader>
@@ -78,7 +78,7 @@ function LineChartComponent({ data }: LineChartComponentProps) {
         </ChartContainer>
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
-        <div className="flex gap-2 font-medium leading-none">
+        <div className="flex gap-2 text-base font-medium leading-none">
           Trending up by 5.2% this year <TrendingUp className="h-4 w-4" />
         </div>
         <div className="leading-none text-muted-foreground">

@@ -77,8 +77,8 @@ export function PieChartComponent({
   return (
     <Card className="flex flex-col justify-center items-center">
       <CardHeader className="items-center pb-0">
-        <CardTitle>{title}</CardTitle>
-        <CardDescription>Data Overview</CardDescription>
+        <CardTitle className="text-2xl">{title}</CardTitle>
+        <CardDescription className="text-base">Data Overview</CardDescription>
       </CardHeader>
       <CardContent className="flex-1 pb-0">
         <ChartContainer
