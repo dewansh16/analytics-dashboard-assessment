@@ -17,7 +17,7 @@ interface DashboardSideDrawerProps {}
 
 const DashboardSideDrawer: FC<DashboardSideDrawerProps> = ({}) => {
   const { theme } = useTheme();
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
 
   return (
     <div>
