@@ -12,7 +12,6 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { Button } from "@/components/ui/Button";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -37,8 +36,8 @@ import {
 
 interface pageProps {}
 
-const page: FC<pageProps> = ({}) => {
-  const [evData, setEvData] = useState([]);
+const Page: FC<pageProps> = ({}) => {
+  const [evData, setEvData] = useState<Record<string, string>[]>([]);
   const [headers, setHeaders] = useState<string[]>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
@@ -55,8 +54,8 @@ const page: FC<pageProps> = ({}) => {
       const csvData = await response.text();
       Papa.parse(csvData, {
         header: true,
-        complete: (result: any) => {
-          setEvData(result.data.slice(0, 5000));
+        complete: (result: { data: Record<string, string>[] }) => {
+          setEvData(result.data);
           const newHeaders = Object.keys(result.data[0] || {});
           setHeaders(newHeaders);
         },
@@ -66,26 +65,28 @@ const page: FC<pageProps> = ({}) => {
     fetchData();
   }, []);
 
-  const columns: ColumnDef<any>[] = headers.map((header) => ({
-    accessorKey: header,
-    header: header,
-    cell: ({ row }) => {
-      const value = row.getValue(header) as string;
-      console.log(value);
-      return (
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger className="max-w-[100%] truncate">
-              {value}
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Add to library</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-      );
-    },
-  }));
+  const columns: ColumnDef<Record<string, string>>[] = headers.map(
+    (header) => ({
+      accessorKey: header,
+      header: header,
+      cell: ({ row }) => {
+        const value = row.getValue(header) as string;
+        console.log(value);
+        return (
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger className="max-w-[100%] truncate">
+                {value}
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Add to library</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        );
+      },
+    })
+  );
 
   const table = useReactTable({
     data: evData,
@@ -112,9 +113,9 @@ const page: FC<pageProps> = ({}) => {
               {table
                 .getAllColumns()
                 .filter((column) => column.getCanHide())
-                .map((column) => {
+                .map((column, idx) => {
                   return (
-                    <div>
+                    <div key={idx}>
                       <DropdownMenuCheckboxItem
                         key={column.id}
                         checked={column.getIsVisible()}
@@ -196,4 +197,4 @@ const page: FC<pageProps> = ({}) => {
   );
 };
 
-export default page;
+export default Page;

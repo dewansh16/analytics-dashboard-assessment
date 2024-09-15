@@ -1,5 +1,5 @@
 "use client";
-import { Dispatch, FC, ReactNode, SetStateAction, useState } from "react";
+import { Dispatch, FC, ReactNode, SetStateAction } from "react";
 import Icons from "./Icons";
 import Link from "next/link";
 import { useTheme } from "@/context/theme-context";
@@ -33,12 +33,8 @@ const sidebarOptions: SidebarOption[] = [
   },
 ];
 
-const DashboardSideNavBar: FC<DashboardSideNavBarProps> = ({
-  DrawerClose,
-  setOpen,
-}) => {
+const DashboardSideNavBar: FC<DashboardSideNavBarProps> = ({ setOpen }) => {
   const { theme } = useTheme();
-  const [activeId, setActiveId] = useState<number>(1);
 
   return (
     <div className=" flex flex-col max-w-60 w-full h-dvh py-4  overflow-y-auto">
@@ -69,10 +65,7 @@ const DashboardSideNavBar: FC<DashboardSideNavBarProps> = ({
                     />
                   </span>
 
-                  <span
-                    className={`truncate ${activeId === option.id ? "" : ""}`}>
-                    {option.name}
-                  </span>
+                  <span className={`truncate`}>{option.name}</span>
                 </Link>
               </li>
             );

@@ -1,13 +1,62 @@
 "use client";
 import { useEffect, useState } from "react";
 import Papa from "papaparse";
-import Badge from "@/components/badge";
+import Badge from "@/components/Badge";
 import { Card } from "@/components/ui/card";
+import {
+  getEVsByCAFVEligibility,
+  getEVsByCity,
+  getEVsByMake,
+  getEVsByType,
+  getEVsByYear,
+  getMakeWithMostEVsAndIncrease,
+  getModelWithMostRange,
+  getRangeByCompanyModelAndYear,
+  getTotalEVPopulationIncrease,
+} from "@/lib/utils";
+import { PieChartComponent } from "@/components/PieChartComponent";
+// import BarChartComponent from "@/components/BarChartComponent";
+
+type topMakerType = { make: string; totalEVs: number; increase: number };
+type evPopulationIncreaseType = {
+  latestYearEVs: number;
+  secondLatestYearEVs: number;
+  rateOfIncrease: number;
+};
+
+type topModelType = { company: string; model: string; range: number };
 
 export default function Home() {
-  const [evData, setEvData] = useState([]);
   const [headers, setHeaders] = useState<string[]>([]);
-  const [eVPopulation, setEVPopulation] = useState<Number>(0);
+  const [eVPopulation, setEVPopulation] = useState<number>(0);
+  const [evByYear, setEvByYear] = useState<Record<string, number>>({});
+  const [evByMake, setEvByMake] = useState<Record<string, number>>({});
+  const [evByCity, setEvByCity] = useState<Record<string, number>>({});
+  const [evByType, setEvByType] = useState<Record<string, number>>({});
+  const [topEvModel, setTopEvModel] = useState<topModelType>({
+    company: "",
+    model: "",
+    range: 0,
+  });
+  const [evByEligibility, setEvByEligibility] = useState<
+    Record<string, number>
+  >({});
+  const [rangeByMakeAndYear, setRangeByMakeAndYear] = useState<
+    Record<string, Record<string, number>>
+  >({});
+  const [totalPopIncrease, setTotalPopIncrease] =
+    useState<evPopulationIncreaseType>({
+      latestYearEVs: 0,
+      secondLatestYearEVs: 0,
+      rateOfIncrease: 0,
+    });
+
+  const [makerWithMostEVsAndIncrease, setMakerWithMostEVsAndIncrease] =
+    useState<topMakerType>({
+      make: "",
+      totalEVs: 0,
+      increase: 0,
+    });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -15,9 +64,37 @@ export default function Home() {
       const csvData = await response.text();
       Papa.parse(csvData, {
         header: true,
-        complete: (result: any) => {
-          setEvData(result.data);
+        complete: (result: { data: Record<string, string>[] }) => {
           const { data } = result || [];
+
+          const newEvByYear = getEVsByYear(data);
+          setEvByYear(newEvByYear);
+
+          const newEvByMake = getEVsByMake(data);
+          setEvByMake(newEvByMake);
+
+          const newEvByCity = getEVsByCity(data);
+          setEvByCity(newEvByCity);
+
+          const newEvByType = getEVsByType(data);
+          setEvByType(newEvByType);
+
+          const newEvByEligibility = getEVsByCAFVEligibility(data);
+          setEvByEligibility(newEvByEligibility);
+
+          const newRangeByMakeAndYear = getRangeByCompanyModelAndYear(data);
+          setRangeByMakeAndYear(newRangeByMakeAndYear);
+
+          const newTotalPopIncreate = getTotalEVPopulationIncrease(data);
+          setTotalPopIncrease(newTotalPopIncreate);
+
+          const makerWithMostEVsAndIncrease =
+            getMakeWithMostEVsAndIncrease(data);
+          setMakerWithMostEVsAndIncrease(makerWithMostEVsAndIncrease);
+
+          const newTopModel = getModelWithMostRange(data);
+          setTopEvModel(newTopModel);
+
           const newHeaders = Object.keys(result.data[0] || {});
           setHeaders(newHeaders);
           setEVPopulation(data.length);
@@ -28,27 +105,92 @@ export default function Home() {
     fetchData();
   }, []);
 
-  console.log("evData = ", evData);
+  console.log(headers, evByYear, evByCity);
 
   return (
     <div className="p-10 pl-16 h-dvh w-dvw">
-      <div className="w-full">
-        <div className="flex gap-4">
-          <Card className="w-full p-4">
-            <p className="pb-2 flex gap-2.5 items-center ">
-              Total EV population
-              <Badge percentage={72} />
-            </p>
-            <p className="text-3xl font-semibold">{`${eVPopulation}`}</p>
-          </Card>
-          <Card className="w-full p-4">
-            <p className="pb-2 flex gap-2.5 items-center ">
-              Total EV population
-              <Badge percentage={72} />
-            </p>
-            <p className="text-3xl font-semibold">{`${eVPopulation}`}</p>
-          </Card>
+      <div className="w-full flex gap-4 justify-between">
+        <div className="w-2/3">
+          <div className=" flex gap-4 pb-5">
+            <Card className="w-1/3 p-4">
+              <p className="pb-2 flex gap-2.5 items-center ">
+                Total EV population
+                <Badge percentage={totalPopIncrease.rateOfIncrease} />
+              </p>
+              <p className="text-3xl font-semibold">{`${eVPopulation}`}</p>
+            </Card>
+            <Card className="w-1/3 p-4">
+              <p className="pb-2 flex gap-2.5 items-center ">
+                Top EV Maker
+                <Badge
+                  percentage={
+                    (makerWithMostEVsAndIncrease.increase /
+                      makerWithMostEVsAndIncrease.totalEVs) *
+                    100
+                  }
+                />
+              </p>
+              <p className="text-3xl font-semibold">
+                {makerWithMostEVsAndIncrease.make}
+              </p>
+            </Card>
+            <Card className="w-1/3 p-4">
+              <p className="pb-2 flex gap-2.5 items-center ">
+                Type of EV (BEVs/PHEVs)
+              </p>
+              <p className="text-3xl font-semibold">
+                {evByType["Battery Electric Vehicle (BEV)"]}/
+                {evByType["Plug-in Hybrid Electric Vehicle (PHEV)"]}
+              </p>
+            </Card>
+          </div>
+          <div className=" flex gap-4">
+            <Card className="w-1/3 p-4">
+              <p className="pb-2 flex gap-2.5 items-center ">
+                CAFV Eligibility{" "}
+                <Badge
+                  percentage={
+                    (evByEligibility[
+                      "Clean Alternative Fuel Vehicle Eligible"
+                    ] /
+                      +eVPopulation) *
+                    100
+                  }
+                />
+              </p>
+              <p className="text-3xl font-semibold">
+                {evByEligibility["Clean Alternative Fuel Vehicle Eligible"]}
+              </p>
+            </Card>
+            <Card className="w-1/3 p-4">
+              <p className="pb-2 flex gap-2.5 items-center ">Max Range EV</p>
+              <p className="text-3xl font-semibold">
+                {topEvModel.company +
+                  " " +
+                  topEvModel.model +
+                  " (" +
+                  topEvModel.range +
+                  ")"}
+              </p>
+            </Card>
+            <Card className="w-1/3 p-4">
+              <p className="pb-2 flex gap-2.5 items-center ">Total EV Models</p>
+              <p className="text-3xl font-semibold">
+                {Object.keys(rangeByMakeAndYear).length}
+              </p>
+            </Card>
+          </div>
         </div>
+        <div className="w-1/3 flex gap-4 justify-center items-center">
+          <PieChartComponent
+            data={evByMake}
+            title="Electric Vehicle Market Share"
+            description="Distribution of different companies by the number of their vehicles in the EV market"
+          />
+        </div>
+      </div>
+      <div className="w-full py-10">
+        {/* <BarChartComponent data={evByYear} /> */}
       </div>
     </div>
   );
